@@ -1,4 +1,4 @@
-__global__ void mandelbrot(float *result, int width, int height, float xmin, float xmax, float ymin, float ymax)
+__global__ void mandelbrot(double *result, int width, int height, double xmin, double xmax, double ymin, double ymax)
 {
     // get grid index
     int gidx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -9,18 +9,18 @@ __global__ void mandelbrot(float *result, int width, int height, float xmin, flo
         return;
 
     // calculate the real and imaginary parts
-    float real = xmin + (xmax - xmin) * gidx / (width - 1);
-    float imag = ymin + (ymax - ymin) * gidy / (height - 1);
+    double real = xmin + (xmax - xmin) * gidx / (width - 1);
+    double imag = ymin + (ymax - ymin) * gidy / (height - 1);
 
     // initialize 
-    float x = 0, y = 0;
-    float value = 0;
+    double x = 0, y = 0;
+    double value = 0;
 
     // iterate until z goes outside the circle of radius 2
-    while (x * x + y * y <= 4 && value < 255)
+    while (x * x + y * y <= 4 && value < 512)
     {
         // calculate
-        float x_new = x * x - y * y + real;
+        double x_new = x * x - y * y + real;
         y = 2 * x * y + imag;
         x = x_new;
         
@@ -30,6 +30,7 @@ __global__ void mandelbrot(float *result, int width, int height, float xmin, flo
 
     // convert value to log scale
     value = logf(value); // alternatively, value = value
+    // value = blockIdx.x * blockIdx.y * value;
 
     // store the result
     result[gidy * width + gidx] = value;
