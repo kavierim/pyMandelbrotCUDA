@@ -1,4 +1,4 @@
-__global__ void mandelbrot(double *result, int width, int height, double xmin, double xmax, double ymin, double ymax)
+__global__ void mandelbrot(double *result, int width, int height, double xmin, double xmax, double ymin, double ymax, int maxIterations)
 {
     // get grid index
     int gidx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -17,7 +17,7 @@ __global__ void mandelbrot(double *result, int width, int height, double xmin, d
     double value = 0;
 
     // iterate until z goes outside the circle of radius 2
-    while (x * x + y * y <= 4 && value < 512)
+    while (x * x + y * y <= 4 && value < maxIterations)
     {
         // calculate
         double x_new = x * x - y * y + real;

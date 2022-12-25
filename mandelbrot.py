@@ -22,10 +22,10 @@ class Mandelbrot:
          # Get a reference to the kernel function
         self.mandelbrot_kernel = mod.get_function("mandelbrot")
 
-    def generate(self, xmin, xmax, ymin, ymax):
+    def generate(self, xmin, xmax, ymin, ymax, maxInterations=1000):
         
         # Execute the kernel function on the GPU
-        self.mandelbrot_kernel(self.result_gpu, np.int32(self.width), np.int32(self.height), np.double(xmin), np.double(xmax), np.double(ymin), np.double(ymax), block=(32, 32, 1), grid=(self.width // 32, self.height // 32))
+        self.mandelbrot_kernel(self.result_gpu, np.int32(self.width), np.int32(self.height), np.double(xmin), np.double(xmax), np.double(ymin), np.double(ymax), np.int32(maxInterations), block=(32, 32, 1), grid=(self.width // 32, self.height // 32))
 
         # Copy the result back to the host
         drv.memcpy_dtoh(self.result, self.result_gpu)

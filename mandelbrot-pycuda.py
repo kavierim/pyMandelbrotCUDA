@@ -12,6 +12,8 @@ zoom = np.double(1.0)
 width = 800
 height = 640
 
+maxIterations = 100
+
 # Create a Mandelbrot object
 m = mandelbrot.Mandelbrot(width, height)
 
@@ -22,7 +24,7 @@ ymin = np.double(centre_point[1] - 1.5 / zoom)
 ymax = np.double(centre_point[1] + 1.5 / zoom)
 
 # Initial results for the Mandelbrot set
-result = m.generate(xmin, xmax, ymin, ymax)
+result = m.generate(xmin, xmax, ymin, ymax, maxIterations)
 
 # Create a figure and plot the initial Mandelbrot set
 fig, ax = plt.subplots()
@@ -32,11 +34,20 @@ plt.colorbar(im)
 
 #show the plot, non blocking
 plt.show(block=False)
-
+ 
 # while loop until space is pressed
 while not keyboard.is_pressed('space'):
     # store start time
     start = time.time()
+
+    # if page up or page down is pressed, change the max iterations
+    if keyboard.is_pressed('page up'):
+        maxIterations = maxIterations + 10
+    if keyboard.is_pressed('page down'):
+        maxIterations = maxIterations - 10
+        if maxIterations < 10:
+            maxIterations = 10
+  
 
     # zoom if + ir - is pressed
     if keyboard.is_pressed('+'):
@@ -65,7 +76,7 @@ while not keyboard.is_pressed('space'):
     ymax = np.double(centre_point[1] + 1.5 / zoom)
 
     # Generate the Mandelbrot set
-    result = m.generate(xmin, xmax, ymin, ymax)
+    result = m.generate(xmin, xmax, ymin, ymax, maxIterations)
 
     #
     im.set_data(result)
@@ -78,9 +89,9 @@ while not keyboard.is_pressed('space'):
     # store end time
     end = time.time()
     # print the time taken to generate the mandelbrot set
-    print("Time taken: ", end - start, "Zoom: ", zoom, "Centre point: ", centre_point)
+    print("Refresh rate: ", 1 / (end - start), "Hz", "Zoom: ", zoom, "Centre point: ", centre_point, "Max iterations: ", maxIterations)
 
-    #time.sleep(0.001)
+
 
 
 
