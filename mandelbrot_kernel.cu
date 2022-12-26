@@ -20,7 +20,7 @@ __global__ void mandelbrot(double *result, int width, int height, double xmin, d
     while (x * x + y * y <= 4 && value < maxIterations)
     {
         // calculate
-        double x_new = x * x - y * y + real;
+        double x_new = pow(x, 2) - pow(y, 2) + real;
         y = 2 * x * y + imag;
         x = x_new;
         
